@@ -1,5 +1,10 @@
 #include motd.sk
 
+#define ELEM {$0::%{$1}%}
+#define ARR {$0::*}
+
 command /test:
 	trigger:
+		set ARR(_foo) to 1, 2, 3
+		broadcast ELEM(_foo, 0)
 		broadcast MOTD

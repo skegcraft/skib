@@ -18,7 +18,81 @@ int alpha(char c) {
 		|| c == '_';
 }
 
-void processLine(FILE *o, char *buffer) {
+int digit(char c) {
+	return (c >= '0' && c <= '9');
+}
+
+int matchMacro(FILE *o, char temp[], char buffer[]) {
+	int i;
+	for (i = 0; i < macrosI; i++) {
+		if (!strcmp(macros[i].name, temp)) {
+			goto match;
+		}
+	}
+
+	return 0;
+
+	match:;
+
+	if (buffer[0] != '(') {
+		fputs(macros[i].value, o);
+		goto finish;
+	}
+
+	// Process macro parameters, after the '('
+	buffer++;
+
+	char params[128][10];
+	int paramsI = 0;
+	while (*buffer != '\0') {
+		while (*buffer == ' ') {buffer++;}
+
+		// Process one parameter (anything that isn't ',' or ' ')
+		if (*buffer != ' ' && *buffer != ',') {
+			int c = 0;
+			while (*buffer != ' ' && *buffer != ',' && *buffer != ')') {
+				params[paramsI][c] = *buffer;
+				c++; buffer++;
+			}
+
+			params[paramsI][c] = '\0';
+			paramsI++;
+		}
+		
+		while (*buffer == ' ') {buffer++;}
+
+		if (*buffer == ',') {
+			buffer++; continue;
+		} else if (*buffer == ')') {
+			break;
+		}
+	}
+
+	// Parse macro value and ouput parameters
+	for (int v = 0; macros[i].value[v] != '\0'; v++) {
+		if (macros[i].value[v] == '$') {
+			if (digit(macros[i].value[v + 1])) {
+				v++;
+				int n = macros[i].value[v] - '0';
+				fputs(params[n], o);
+				continue;
+			}
+		}
+
+		fputc(macros[i].value[v], o);
+	}
+
+	// Finish off the rest of the line
+	finish:;
+	while (*buffer != '\0') {
+		fputc(*buffer, o);
+		buffer++;
+	}
+
+	return 1;
+}
+
+void processLine(FILE *o, char buffer[]) {
 	char temp[512];
 	int tempC;
 	int c = 0;
@@ -62,11 +136,9 @@ void processLine(FILE *o, char *buffer) {
 
 			temp[tempC] = '\0';
 
-			for (int i = 0; i < macrosI; i++) {
-				if (!strcmp(macros[i].name, temp)) {
-					fputs(macros[i].value, o);
-					goto next;
-				}
+			// Match macros
+			if (matchMacro(o, temp, buffer + c)) {
+				return;
 			}
 
 			fputs(temp, o);
@@ -87,7 +159,6 @@ void processLine(FILE *o, char *buffer) {
 			fputc(buffer[c], o);
 			c++;
 		}
-		next:;
 	}
 }
 
@@ -106,6 +177,8 @@ void processFile(FILE *o, char name[]) {
 
 int main(int argc, char *argv[]) {
 	if (argc < 3) {
+		puts("Usage:\n"
+			"skib <input file> <output file>");
 		return -1;
 	}
 
