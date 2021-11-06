@@ -64,7 +64,7 @@ int matchMacro(FILE *o, char temp[], char buffer[]) {
 		if (*buffer == ',') {
 			buffer++; continue;
 		} else if (*buffer == ')') {
-			break;
+			buffer++; break;
 		}
 	}
 
