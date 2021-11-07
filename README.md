@@ -3,15 +3,23 @@ A basic build system for the [Skript](https://github.com/SkriptLang/Skript) scri
 
 ## Features
 - `#include` other files recursively
-- `#define` preprocessor symbols, and use them in code
+- `#define` preprocessor symbols and macros
 
 ## Usage
 ```
-$ gcc main.c -o skib; cp skib /bin/
-$ cd test
-$ skib main.sk ~/MyServ/plugins/Skript/scripts/main.sk
+# Install
+sudo gcc main.c -o /bin/skib
+cd test
+skib main.sk ~/MyServ/plugins/Skript/scripts/test.sk
 ```
 
-## TODO:
-- Macros
-- Python to Skript transpiler?
+## Syntax
+It's pretty similar to the C preprocessor.  
+`test/` should showcase all you need to know.  
+- `#include` does not need double quotes around filename
+- macro declaration don't have parameter names, use `$0`, $1`..
+```
+#define MY_MACRO $0 times
+loop RANGE(10):
+  broadcast "Foo"
+```
