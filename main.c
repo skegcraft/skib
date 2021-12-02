@@ -121,6 +121,8 @@ void processLine(FILE *o, char buffer[]) {
 			} else {
 				// TODO: Ignore comments? Change pp symbol?
 			}
+			
+			fputc('\n', o);
 
 			return;
 		}
