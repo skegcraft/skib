@@ -1,0 +1,8 @@
+# Janky macros to hide the crappy syntax
+
+#define ELEMV {$0::%{$1}%}
+#define ELEMN {$0::$1}
+
+#define ARR {$0::*}
+
+#define RANGE $0 times

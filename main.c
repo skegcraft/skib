@@ -4,7 +4,7 @@
 
 struct Macro {
 	char name[128];
-	char value[128];
+	char value[1024];
 };
 
 struct Macro macros[64];
@@ -48,6 +48,7 @@ int matchMacro(FILE *o, char temp[], char buffer[]) {
 		while (*buffer == ' ') {buffer++;}
 
 		// Process one parameter (anything that isn't ',' or ' ')
+		// TODO: macros don't process strings EXEC("/say hi")
 		if (*buffer != ' ' && *buffer != ',') {
 			int c = 0;
 			while (*buffer != ' ' && *buffer != ',' && *buffer != ')') {
@@ -181,9 +182,10 @@ int main(int argc, char *argv[]) {
 	if (argc < 3) {
 		puts("Usage:\n"
 			"skib <input file> <output file>");
-		return -1;
+		return 1;
 	}
 
 	FILE *o = fopen(argv[2], "wb");
 	processFile(o, argv[1]);
+	return 0;
 }

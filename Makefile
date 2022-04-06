@@ -1,3 +1,12 @@
+skib: main.c
+	$(CC) main.c -o skib
+
+install: skib
+	cp skib /bin/
+
+clean:
+	rm -rf skib *.out
+
 demo:
 	touch output.sk
 	$(CC) main.c -o skib
@@ -7,6 +16,7 @@ demo:
 	@echo "----"
 	rm output.sk
 
+# Server live test
 FILE?=~/Skegcraft/plugins/Skript/scripts/test.sk
 SCREEN?=skegcraft
 server:
@@ -14,6 +24,4 @@ server:
 	$(CC) main.c -o skib
 	cd test; ../skib main.sk $(FILE)
 	sudo screen -S $(SCREEN) -X stuff "skript reload test\n"
-
-clean:
-	rm -rf skib *.out
+	sudo screen -S $(SCREEN) -X stuff "test\n"
