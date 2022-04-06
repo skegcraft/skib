@@ -1,0 +1,17 @@
+
+
+
+
+
+
+
+
+
+
+
+
+command /test:
+	trigger:
+		set {_foo::*} to 1, 2, 3
+		broadcast {_foo::0}
+		broadcast "Hello, World"

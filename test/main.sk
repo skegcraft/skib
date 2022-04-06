@@ -4,6 +4,6 @@
 
 command /test:
 	trigger:
-		set ARR(_foo) to 1, 2, 3
+		set TMPARR(foo) to 1, 2, 3
 		broadcast ELEMN(_foo, 0)
 		broadcast MOTD

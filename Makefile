@@ -7,9 +7,8 @@ install: skib
 clean:
 	rm -rf skib *.out
 
-demo:
+demo: skib
 	touch output.sk
-	$(CC) main.c -o skib
 	cd test; ../skib main.sk ../output.sk
 	@echo "----"
 	@cat output.sk

@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_VALUE 2048
+
 struct Macro {
 	char name[128];
-	char value[1024];
+	char value[MAX_VALUE];
 };
 
-struct Macro macros[64];
+struct Macro macros[128];
 int macrosI = 0;
 
 void processFile(FILE *o, char name[]);
@@ -114,6 +116,10 @@ void processLine(FILE *o, char buffer[]) {
 				token = strtok(NULL, " ");
 				strcpy(macros[macrosI].name, token);
 				token += strlen(token) + 1;
+				if (strlen(token) > MAX_VALUE) {
+					printf("ERR, value '%s' is too long. Must be under %d.", token, MAX_VALUE);
+				}
+				
 				strcpy(macros[macrosI].value, token);
 				macrosI++;
 			} else if (!strcmp(token, "include")) {
@@ -174,6 +180,11 @@ void processFile(FILE *o, char name[]) {
 	}
 	
 	while (fgets(buffer, sizeof(buffer), f)) {
+		// Ignore blank lines
+		if (buffer[0] == '\n') {
+			continue;
+		}
+
 		processLine(o, buffer);
 	}
 }

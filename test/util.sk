@@ -1,8 +1,15 @@
-# Janky macros to hide the crappy syntax
+# Skript utility library
+# Written by Daniel Cook
+# Must be preprocessed by skib - see https://github.com/skegcraft/skib
 
+# Get element from variable
 #define ELEMV {$0::%{$1}%}
+
+# Get element from number
 #define ELEMN {$0::$1}
 
+# Define array
 #define ARR {$0::*}
 
 #define RANGE $0 times
+#define LEN length of $0
